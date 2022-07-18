@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <input type="button" value="Save answers" onclick="save()">
+    <input type="button" value="Clear answers" onclick="clearAnswer()">
+
+    <script>
+
+        const body = document.querySelector('body')
+
+        getData()
+
+        async function getData() {
+
+            const response = await fetch(`quiz.JSON`)
+            const myData = await response.json()
+
+            const myDataArray = Object.entries(myData.quiz)
+
+            // console.log(myDataArray)
+
+            for (const [key, { question, options }] of myDataArray) {
+
+
+                body.innerHTML += `<h3>Question ${key.replace(`q`, '')}: ${question}</h3>`
+
+                for (let i = 0; i < options.length; i++) {
+
+                    body.innerHTML += `<input type="radio" name="${key}" value="${options[i]}">${options[i]}<br>`
+
+                }
+
+            }
+
+            function reload() {
+                const arrQ1 = Array.from(document.getElementsByName('q1'));
+                const arrQ2 = Array.from(document.getElementsByName('q2'));
+                const arrQ3 = Array.from(document.getElementsByName('q3'));
+                const arrQ4 = Array.from(document.getElementsByName('q4'));
+
+                const valQ1 = localStorage.getItem('q1');
+                const valQ2 = localStorage.getItem('q2');
+                const valQ3 = localStorage.getItem('q3');
+                const valQ4 = localStorage.getItem('q4');
+
+                loopOver(arrQ1, valQ1)
+                loopOver(arrQ2, valQ2)
+                loopOver(arrQ3, valQ3)
+                loopOver(arrQ4, valQ4)
+
+            }
+
+            reload()
+        }
+
+
+        function loopOver(arr, storage) {
+
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i].value == storage) {
+                    arr[i].checked = true;
+                }
+            }
+
+        }
+
+        function save() {
+
+            let q1 = document.querySelector('input[name="q1"]:checked')?.value;
+            localStorage.setItem("q1", q1);
+            let q2 = document.querySelector('input[name="q2"]:checked')?.value;
+            localStorage.setItem("q2", q2);
+            let q3 = document.querySelector('input[name="q3"]:checked')?.value;
+            localStorage.setItem("q3", q3);
+            let q4 = document.querySelector('input[name="q4"]:checked')?.value;
+            localStorage.setItem("q4", q4);
+
+        }
+
+
+        function clearAnswer() {
+
+            localStorage.clear()
+        }
+
+    </script>
+
+</body>
+
+</html>
